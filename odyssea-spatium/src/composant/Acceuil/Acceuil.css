@@ -1,0 +1,22 @@
+.images{
+    height: 350px !important;
+}
+.image-gallery-slides{
+    height: 400px;
+}
+.image-gallery-description{
+    margin-bottom: 400px;
+}
+
+.fullscreen .image-gallery-slides{
+    height: 100% !important;
+}
+.fullscreen .image-gallery-description{
+    margin:40px  !important;
+}
+.image-gallery-thumbnails-wrapper{
+    display: none !important;
+}
+.image-gallery-custom{
+    right: 70px !important;
+}
