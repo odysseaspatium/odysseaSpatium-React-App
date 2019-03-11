@@ -1,26 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 
+
+import Notfound from "./composant/NotFound/NotFound";
+import Acceuil from "./composant/Acceuil/Acceuil";
+import NavBar from "./composant/NavBar/NavBar";
+import Panier from "./composant/Panier/Panier"; 
+import Historique from "./composant/Historique/Historique"; 
+import Voyage from "./composant/Voyage/Voyage"; 
+
 class App extends Component {
+
   render() {
+  
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+
+      <BrowserRouter>
+      <div>
+          <NavBar />
+          <Switch>
+            <Route exact path="/" component={Acceuil} />
+            <Route exact path="/panier" component={Panier} />
+            <Route exact path="/historique"  component={Historique}/>
+            <Route exact path="/voyage"  component={Voyage}/>
+            <Route exact path="/acceuil"  component={Acceuil}/>
+            <Route component={Notfound} />
+         
+          </Switch>
+        </div>
+    </BrowserRouter>
     );
   }
 }
