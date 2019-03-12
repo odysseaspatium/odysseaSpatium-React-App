@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import ImageGallery from 'react-image-gallery';
+import {withRouter} from 'react-router-dom';
 import './Acceuil.css';
 import '../../../node_modules/react-image-gallery/styles/css/image-gallery.css';
 const PREFIX_URL = '';
 
 class Acceuil extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
+      history: this.props.history,
       showIndex: true,
       showBullets: true,
       infinite: true,
@@ -19,20 +21,31 @@ class Acceuil extends Component {
       showNav: false,
       isRTL: false,
       slideDuration: 450,
-      slideInterval: 2000,
+      slideInterval: 4500,
       showVideo: {},
       showMore:null,
     };
     this.images = [
       {
+        id:1,
         original: `${PREFIX_URL}saturn.jpg`,
         originalClass: 'featured-slide',
-        description: 'Voyage pour saturne une oportunité a ne pas louper'
+        description: 'Voyage pour saturne une opportunité a ne pas louper',
+        onclick:this._redirect
       },
       {
+        id:2,
         original: `${PREFIX_URL}kepler-452b.jpg`,
         originalClass: 'featured-slide',
-        description: 'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%'
+        description: 'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%',
+        onclick:this._redirect
+      },
+      {
+        id:3,
+        original: `${PREFIX_URL}exoplanet.jpg`,
+        originalClass: 'featured-slide',
+        description: 'Planete BRZ, Partez pour bronzer !',
+        onclick:this._redirect
       }
     ]
   }
@@ -44,11 +57,17 @@ class Acceuil extends Component {
       this._imageGallery.play();
     }
   }
-  _redirect(event){
-    return null;
+  _redirect(){
+    let index = this._imageGallery.getCurrentIndex();
+    let id_Voyage_Courant = this.images[index].id;
+    this.state.history.push({
+      pathname: '/voyage',
+      state :{id_Voyage:id_Voyage_Courant}
+      }
+    );
   }
   _renderCustomControls() {
-    return <button className='image-gallery-fullscreen-button image-gallery-custom' />
+    return <button className='image-gallery-custom' type="button"  aria-label="Open Info" onClickCapture={this._redirect.bind(this)}></button>
   }
   _handleInputChange(state, event) {
     this.setState({[state]: event.target.value});
@@ -78,7 +97,7 @@ class Acceuil extends Component {
             slideDuration={parseInt(this.state.slideDuration)}
             slideInterval={parseInt(this.state.slideInterval)}
             additionalClass="app-image-gallery"
-            renderCustomControls={this._renderCustomControls}
+            renderCustomControls={this._renderCustomControls.bind(this)}
           />
           </section>
         </div>
@@ -87,5 +106,5 @@ class Acceuil extends Component {
     }
   }
   
-  export default Acceuil;
+  export default withRouter(Acceuil);
   

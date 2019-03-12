@@ -18,5 +18,36 @@
     display: none !important;
 }
 .image-gallery-custom{
-    right: 70px !important;
+    bottom: 0;  
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    position: absolute;
+    z-index: 4;
+    right: 80px !important;
+}
+.image-gallery-custom::before{
+    content: "\f149";
+    font-size: 2.7em;
+    padding: 15px 20px;
+    text-shadow: 0 1px 1px #1a1a1a;
+    color: #fff;
+    line-height: .7;
+    transition: color .2s ease-out;
+    display: inline-block;
+    font-family: "Ionicons";
+    font-style: normal;
+    font-weight: normal;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+}
+.image-gallery-custom:hover{
+    color: #fff;
+    transform: scale(1.1);
 }

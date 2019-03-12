@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import './App.css';
 
 
@@ -16,20 +17,20 @@ class App extends Component {
   
     return (
 
-      <BrowserRouter>
+      <Router history={createBrowserHistory()}>
       <div>
           <NavBar />
           <Switch>
             <Route exact path="/" component={Acceuil} />
-            <Route exact path="/panier" component={Panier} />
-            <Route exact path="/historique"  component={Historique}/>
-            <Route exact path="/voyage"  component={Voyage}/>
-            <Route exact path="/acceuil"  component={Acceuil}/>
+            <Route  path="/panier" component={Panier} />
+            <Route  path="/historique"  component={Historique}/>
+            <Route  path="/voyage"  component={Voyage}/>
+            <Route  path="/acceuil"  component={Acceuil}/>
             <Route component={Notfound} />
          
           </Switch>
         </div>
-    </BrowserRouter>
+    </Router>
     );
   }
 }

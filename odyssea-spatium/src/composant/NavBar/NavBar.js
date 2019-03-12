@@ -2,25 +2,76 @@ import React, { Component } from 'react';
 import {Nav, Navbar, Form, Button} from 'react-bootstrap';
 import ReactModalLogin from "react-modal-login";
 import { Link } from 'react-router-dom'
+import {axios} from 'axios'
 import './NavBar.css';
 
-function checkMailMdp(email,mdp){
-  let expRegMail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!expRegMail.test(String(email).toLowerCase())){
-    return false;
-  }
-  let expRegMdp = /([0-9]*)+([a-z]*)+([A-Z]*)/;
-  if(mdp.length < 6 || !expRegMdp.test(mdp)) {
-      return false;
-  }
+function checkMail(email,elem){
+    /* Une adresse e-mail, c'est
+  * des caractères : lettres, chiffres, points et tirets (hauts ou bas),
+  * un symbole "arobase" @,
+  * des caractères : comme au début ; au moins deux,
+  * un point,
+  * des caractères : de 2 à 4 lettres minuscules.
+  */
+ let expRegMail = /^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
+ if (!expRegMail.test(String(email).toLowerCase())){
+   elem.errorMsg="Votre mail est incorrect"
+   return false;
+ }
+ return true;
 }
-
-function checkForm(nom,prenom,email,mdp){
-    let expRegId = /^\w+$/;
-    if(!expRegId.test(nom) || !expRegId.test(prenom)) {
+function checkMailMdp(email,mdp,elem){
+  if(!checkMail(email,elem)) return false;
+  /* Le mot de passe, c'est
+  * des caractères: [a-zA-Z]
+  * des chiffres : \d,
+  * au moins un caractere special: [^A-Za-z0-9],
+  * des une taille superieure ou egale a 6 : {6,}.
+  */
+  var listRe = [{
+    re: /[a-zA-Z]/g,
+    msg: "Votre mot de passe doit avoir des lettres en minuscule et majuscule"
+  }, {
+    re: /\d/g,
+    msg: "Votre mot de passe doit avoir des chiffres"
+  }, {
+    re: /[^A-Za-z0-9]/g,
+    count: 1,
+    msg: "Votre mot de passe doit posséder au moins 1 caractère spécial"
+  },
+  {
+    re: /^.{6,}$/,
+    msg: "Votre mot de passe doit être plus grand ou égal à 6 caractères"
+  }];
+ 
+  for (var i = 0; i < listRe.length; i++) {
+    var item = listRe[i];
+    var match = mdp.match(item.re);
+    if (null === match || match.length < item.count) {
+      elem.errorMsg=item.msg;
       return false;
     }
-    if(!checkMailMdp(email,mdp))return false;
+  }
+  return true;
+}
+
+function checkForm(nom,prenom,email,mdp,elem){
+  /* Explication exp reguliere
+  * ^ : Debut de chaine
+  * [a-z] : De a à z compris
+  *  + : {1,} Au moins une fois
+  * $ : Fin de chaine 
+  */
+    let expRegId = /^[a-z]+$/;
+    if(!expRegId.test(nom)){
+      elem.errorMsg="Votre nom doit uniquement contenir des lettres"
+      return false;
+    }
+    if(!expRegId.test(prenom)) {
+      elem.errorMsg="Votre prenom doit uniquement contenir des lettres"
+      return false;
+      }
+    if(!checkMailMdp(email,mdp,elem))return false;
     return true;
 }
 class NavBar extends Component {
@@ -34,16 +85,17 @@ class NavBar extends Component {
       loading: false,
       error: null,
       initialTab: null,
+      errorMsg: null,
       recoverPasswordSuccess: null,
     };
   }
   onLogin() {
     this.startLoading();
    
-    const email = document.querySelector('#email').value;
+    const email = document.querySelector('#email').value.toLowerCase();
     const mdp = document.querySelector('#mdp').value;
-
-    if (!email || !mdp || checkMailMdp(email,mdp)) {
+    this.errorMsg=null;
+    if (!checkMailMdp(email,mdp,this)) {
       this.setState({
         error: true
       })
@@ -83,12 +135,12 @@ class NavBar extends Component {
   }
 
   onRegister() {
-    const nom = document.querySelector('#nom').value;
-    const prenom = document.querySelector('#prenom').value;
-    const email = document.querySelector('#email').value;
+    const nom = document.querySelector('#nom').value.toLowerCase();
+    const prenom = document.querySelector('#prenom').value.toLowerCase();
+    const email = document.querySelector('#email').value.toLowerCase();
     const mdp = document.querySelector('#mdp').value;
-
-    if (!email || !mdp || !nom || !prenom || !checkForm(nom,prenom,email,mdp)) {
+    this.errorMsg=null;
+    if (!checkForm(nom,prenom,email,mdp,this)) {
       this.setState({
         error: true
       })
@@ -98,6 +150,26 @@ class NavBar extends Component {
       this.setState({
         error:false
       })
+      axios({
+        url: 'http://',
+        method: 'post',
+        data: {
+          nom: nom,
+          prenom:prenom,
+          email:email,
+          motdepasse:mdp,
+        }
+      }).then(res => {
+        if (res.data === "failed"){
+          this.setState({
+            error: true
+          })
+        }
+        
+        else {
+          this.onLoginSuccess(nom);
+        }  
+    });
       /*
       axios({
         method: 'post',
@@ -129,11 +201,9 @@ class NavBar extends Component {
   }
       
   onRecoverPassword() {
-   
     const email = document.querySelector('#email').value;
-
-
-    if (!email) {
+    this.errorMsg=null;
+    if (!checkMail(email,this)) {
       this.setState({
         error: true,
         recoverPasswordSuccess: false
@@ -232,6 +302,15 @@ class NavBar extends Component {
         tabs={{
           afterChange: this.afterTabsChange.bind(this)
         }}
+        loginError={{
+          label: this.errorMsg
+        }}
+        registerError={{
+          label: this.errorMsg
+        }}
+        recoverPasswordError={{
+          label: this.errorMsg
+        }}
         startLoading={this.startLoading.bind(this)}
         finishLoading={this.finishLoading.bind(this)}
         form={{
@@ -322,15 +401,6 @@ class NavBar extends Component {
               id: 'email',
               name: 'email',
               placeholder: 'Email',
-            },
-            {
-              containerClass: 'RML-form-group',
-              label: 'Mot de passe',
-              type: 'password',
-              inputClass: 'RML-form-control',
-              id: 'mdp',
-              name: 'mdp',
-              placeholder: 'Mot de passe',
             }
           ],
         }}
