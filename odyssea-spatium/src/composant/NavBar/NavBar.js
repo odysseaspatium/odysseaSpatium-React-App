@@ -2,19 +2,13 @@ import React, { Component } from 'react';
 import {Nav, Navbar, Form, Button} from 'react-bootstrap';
 import ReactModalLogin from "react-modal-login";
 import { Link } from 'react-router-dom'
-import {axios} from 'axios'
+import axios from 'axios'
 import './NavBar.css';
+import * as Parametres from '../../Param';
 
 function checkMail(email,elem){
-    /* Une adresse e-mail, c'est
-  * des caractères : lettres, chiffres, points et tirets (hauts ou bas),
-  * un symbole "arobase" @,
-  * des caractères : comme au début ; au moins deux,
-  * un point,
-  * des caractères : de 2 à 4 lettres minuscules.
-  */
- let expRegMail = /^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/;
- if (!expRegMail.test(String(email).toLowerCase())){
+  
+ if (!Parametres.EXP_REG_MAIL.test(String(email).toLowerCase())){
    elem.errorMsg="Votre mail est incorrect"
    return false;
  }
@@ -22,30 +16,9 @@ function checkMail(email,elem){
 }
 function checkMailMdp(email,mdp,elem){
   if(!checkMail(email,elem)) return false;
-  /* Le mot de passe, c'est
-  * des caractères: [a-zA-Z]
-  * des chiffres : \d,
-  * au moins un caractere special: [^A-Za-z0-9],
-  * des une taille superieure ou egale a 6 : {6,}.
-  */
-  var listRe = [{
-    re: /[a-zA-Z]/g,
-    msg: "Votre mot de passe doit avoir des lettres en minuscule et majuscule"
-  }, {
-    re: /\d/g,
-    msg: "Votre mot de passe doit avoir des chiffres"
-  }, {
-    re: /[^A-Za-z0-9]/g,
-    count: 1,
-    msg: "Votre mot de passe doit posséder au moins 1 caractère spécial"
-  },
-  {
-    re: /^.{6,}$/,
-    msg: "Votre mot de passe doit être plus grand ou égal à 6 caractères"
-  }];
  
-  for (var i = 0; i < listRe.length; i++) {
-    var item = listRe[i];
+  for (var i = 0; i <Parametres.LISTE_EXP_REG_MDP.length; i++) {
+    var item = Parametres.LISTE_EXP_REG_MDP[i];
     var match = mdp.match(item.re);
     if (null === match || match.length < item.count) {
       elem.errorMsg=item.msg;
@@ -56,18 +29,11 @@ function checkMailMdp(email,mdp,elem){
 }
 
 function checkForm(nom,prenom,email,mdp,elem){
-  /* Explication exp reguliere
-  * ^ : Debut de chaine
-  * [a-z] : De a à z compris
-  *  + : {1,} Au moins une fois
-  * $ : Fin de chaine 
-  */
-    let expRegId = /^[a-z]+$/;
-    if(!expRegId.test(nom)){
+    if(!Parametres.EXP_REG_NOM_PRENOM.test(nom)){
       elem.errorMsg="Votre nom doit uniquement contenir des lettres"
       return false;
     }
-    if(!expRegId.test(prenom)) {
+    if(!Parametres.EXP_REG_NOM_PRENOM.test(prenom)) {
       elem.errorMsg="Votre prenom doit uniquement contenir des lettres"
       return false;
       }
@@ -151,7 +117,7 @@ class NavBar extends Component {
         error:false
       })
       axios({
-        url: 'http://',
+        url: 'http://10.0.2.15:8080/',
         method: 'post',
         data: {
           nom: nom,
@@ -162,12 +128,12 @@ class NavBar extends Component {
       }).then(res => {
         if (res.data === "failed"){
           this.setState({
+            errorMsg:"impossible de s'enregistrer",
             error: true
           })
-        }
-        
-        else {
-          this.onLoginSuccess(nom);
+        }else {
+          this.props.updateuser(res.data.id);
+          this.onLoginSuccess(nom+" "+prenom);
         }  
     });
       /*
@@ -278,9 +244,11 @@ class NavBar extends Component {
       
       <div>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="#home">Odyssea Spatium</Navbar.Brand>
+          <Navbar.Brand href="/">Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
-            <li className="acceuil"><Link to="/acceuil">Acceuil</Link></li>
+            <li className="Lien"><Link to="/acceuil">Acceuil</Link></li>
+            <li className="Lien"><Link to="/Historique">Historique</Link></li>
+            <li className="Lien"><Link to="/Panier">Panier</Link></li>
           </Nav>
           {loggedIn ? (
             <div className="login">
@@ -292,7 +260,6 @@ class NavBar extends Component {
             </Form>
           )}
         </Navbar>
-        <br />
         <ReactModalLogin
         visible={this.state.showModal}
         onCloseModal={this.closeModal.bind(this)}
@@ -300,7 +267,9 @@ class NavBar extends Component {
         initialTab={this.state.initialTab}
         error={this.state.error}
         tabs={{
-          afterChange: this.afterTabsChange.bind(this)
+          afterChange: this.afterTabsChange.bind(this),
+          loginLabel: "Connexion",
+          registerLabel: "S'enregistrer"
         }}
         loginError={{
           label: this.errorMsg

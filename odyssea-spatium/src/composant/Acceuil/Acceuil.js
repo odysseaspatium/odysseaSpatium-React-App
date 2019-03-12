@@ -3,7 +3,7 @@ import ImageGallery from 'react-image-gallery';
 import {withRouter} from 'react-router-dom';
 import './Acceuil.css';
 import '../../../node_modules/react-image-gallery/styles/css/image-gallery.css';
-const PREFIX_URL = '';
+import * as Parametres from '../../Param';
 
 class Acceuil extends Component {
   constructor(props) {
@@ -28,21 +28,21 @@ class Acceuil extends Component {
     this.images = [
       {
         id:1,
-        original: `${PREFIX_URL}saturn.jpg`,
+        original: `${Parametres.PREFIX_URL}saturn.jpg`,
         originalClass: 'featured-slide',
         description: 'Voyage pour saturne une opportunité a ne pas louper',
         onclick:this._redirect
       },
       {
         id:2,
-        original: `${PREFIX_URL}kepler-452b.jpg`,
+        original: `${Parametres.PREFIX_URL}kepler-452b.jpg`,
         originalClass: 'featured-slide',
         description: 'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%',
         onclick:this._redirect
       },
       {
         id:3,
-        original: `${PREFIX_URL}exoplanet.jpg`,
+        original: `${Parametres.PREFIX_URL}exoplanet.jpg`,
         originalClass: 'featured-slide',
         description: 'Planete BRZ, Partez pour bronzer !',
         onclick:this._redirect
@@ -81,12 +81,14 @@ class Acceuil extends Component {
     render() {
      
       return (
-        <div>
-          <section className='images'>
+        <div className='pub'>
+          <section >
           <ImageGallery
             ref={i => this._imageGallery = i}
             items={this.images}
+            autoPlay={true}
             lazyLoad={false}
+            onClick={this._redirect.bind(this)}
             infinite={this.state.infinite}
             showBullets={this.state.showBullets}
             showFullscreenButton={this.state.showFullscreenButton && this.state.showGalleryFullscreenButton}

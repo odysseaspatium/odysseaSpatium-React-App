@@ -1,6 +1,7 @@
 
 .image-cadis{
     bottom: 0;  
+    margin-right: 5px;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -10,10 +11,11 @@
     outline: none;
     z-index: 4;
     border-radius: 15px;
+    padding: 0px;
 }
 .image-cadis::before{
  content: '\f370';
- font-size: 2.7em;
+ font-size: 1.7em;
  padding: 15px 20px;
  text-shadow: 0 1px 1px #1a1a1a;
  color: #fff;
@@ -32,7 +34,42 @@
  color: #fff;
  transform: scale(1.1);
 }
+.contenant-prix{
+    background: #03043a;
+    width: 15%;
+}
 .contenant-cadis{
     right: 0px;
     position: absolute;
+}
+hr{
+    border-top: 1px solid rgba(255,255,255,1);
+}
+.insideStyles{
+    background: rgba(255,255,255,.7);
+    padding: 20px;
+    color: black;
+    position: absolute;
+    top:10%;
+}
+.image-gallery-fullscreen-button::before, .image-gallery-play-button::before{
+font-size: 1.7em;
+}
+.Contenant-images{
+    width: 40% ;
+    font-size: 0.7em;
+}
+.Contenant-images .image-gallery-slides{
+    height: 305px !important;
+}
+.image-gallery-slides {
+    height: auto !important;
+}
+.description-achat-voyage tr td{
+    vertical-align: top;
+}
+
+textarea{
+    resize: none !important;
+    vertical-align: baseline !important;
 }

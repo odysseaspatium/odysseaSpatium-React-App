@@ -1,0 +1,56 @@
+table{
+    width: 100%;
+}
+.titres{
+    width: 50%;
+}
+.paniers::before{
+    content: '\f110';
+    font-size: 1.7em;
+    padding: 15px 20px;
+    text-shadow: 0 1px 1px #1a1a1a;
+    color: #fff;
+    line-height: .7;
+    transition: color .2s ease-out;
+    display: inline-block;
+    font-family: "Ionicons";
+    font-style: normal;
+    font-weight: normal;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+
+}
+.commentaires::before{
+    content: '\f3b2';
+    font-size: 1.7em;
+    padding: 15px 20px;
+    text-shadow: 0 1px 1px #1a1a1a;
+    color: #fff;
+    line-height: .7;
+    transition: color .2s ease-out;
+    display: inline-block;
+    font-family: "Ionicons";
+    font-style: normal;
+    font-weight: normal;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+}
+.commentaires,.paniers{
+    background: transparent;
+    height: 400px;
+    width: -moz-available;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+}
+.commentaires:hover,.paniers:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+.ligneBouttons{
+    text-align: center;
+}
