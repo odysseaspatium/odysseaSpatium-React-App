@@ -1,4 +1,5 @@
 export const PREFIX_URL = '';
+export const URL_TOMCAT = 'http://localhost:8080/agenceVoyageTomcat'
 export const DUREE_SLIDE= 450;
 export const INTERVAL_SLIDE=4500;
   /* Une adresse e-mail, c'est

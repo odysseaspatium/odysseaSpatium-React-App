@@ -117,7 +117,7 @@ class NavBar extends Component {
         error:false
       })
       axios({
-        url: 'http://10.0.2.15:8080/',
+        url: `${Parametres.URL_TOMCAT}/Inscription`,
         method: 'post',
         data: {
           nom: nom,
