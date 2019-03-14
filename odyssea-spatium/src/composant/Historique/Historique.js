@@ -18,7 +18,7 @@ class Historique extends Component {
   }
   redirectCommentaires(){
     this.state.history.push({
-      pathname:'/historiqueCommentaires',
+      pathname:'/agenceVoyageTomcat/historiqueCommentaires',
       id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })
@@ -26,7 +26,7 @@ class Historique extends Component {
   }
   redirectPaniers(){
     this.state.history.push({
-      pathname:'/historiquePanier',
+      pathname:'/agenceVoyageTomcat/historiquePanier',
       id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })

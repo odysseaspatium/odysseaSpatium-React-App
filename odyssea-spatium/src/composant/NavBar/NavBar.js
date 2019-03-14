@@ -214,9 +214,9 @@ class NavBar extends Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand href="/">Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
-            <li className="Lien"><Link to="/acceuil">Acceuil</Link></li>
-            <li className="Lien"><Link to="/Historique">Historique</Link></li>
-            <li className="Lien"><Link to="/Panier">Panier</Link></li>
+            <li className="Lien"><Link to="/agenceVoyageTomcat/acceuil">Acceuil</Link></li>
+            <li className="Lien"><Link to="/agenceVoyageTomcat/Historique">Historique</Link></li>
+            <li className="Lien"><Link to="/agenceVoyageTomcat/Panier">Panier</Link></li>
           </Nav>
           {loggedIn ? (
             <div className="login">

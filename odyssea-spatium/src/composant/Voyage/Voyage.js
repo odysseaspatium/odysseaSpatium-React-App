@@ -83,7 +83,7 @@ class Voyage extends Component {
   }
   _redirect(){
     this.state.history.push({
-      pathname: '/panier',
+      pathname: '/agenceVoyageTomcat/panier',
       state :{
         id_Utilisateur:this.id_Utilisateur,
         id_Voyage:this.id

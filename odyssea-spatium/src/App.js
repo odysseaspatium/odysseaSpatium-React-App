@@ -30,13 +30,13 @@ class App extends Component {
           <NavBar updateuser={this.updateuser} />
           <Switch>
             <Route exact path="/" component={Acceuil} />
-            <Route  path="/panier" component={Panier} />
-            <Route  path="/historique"  component={Historique}/>
-            <Route  path="/historiquePanier"  component={HPanier}/>
-            <Route  path="/historiqueCommentaires"  component={HCommentaires}/>
-            <Route  path="/voyage"  component={Voyage}/>
-			<Route 	path="/agenceVoyageTomcat/index.html"	component={Acceuil}/>
-            <Route  path="/acceuil"  component={Acceuil}/>
+            <Route  path="/agenceVoyageTomcat/index.html" component={Acceuil} />
+            <Route  path="/agenceVoyageTomcat/panier" component={Panier} />
+            <Route  path="/agenceVoyageTomcat/historique"  component={Historique}/>
+            <Route  path="/agenceVoyageTomcat/historiquePanier"  component={HPanier}/>
+            <Route  path="/agenceVoyageTomcat/historiqueCommentaires"  component={HCommentaires}/>
+            <Route  path="/agenceVoyageTomcat/voyage"  component={Voyage}/>
+            <Route  path="/agenceVoyageTomcat/acceuil"  component={Acceuil}/>
             <Route component={Notfound} />
          
           </Switch>

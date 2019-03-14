@@ -61,7 +61,7 @@ class Acceuil extends Component {
     let index = this._imageGallery.getCurrentIndex();
     let id_Voyage_Courant = this.images[index].id;
     this.state.history.push({
-      pathname: '/voyage',
+      pathname: '/agenceVoyageTomcat/voyage',
       state :{id_Voyage:id_Voyage_Courant}
       }
     );
