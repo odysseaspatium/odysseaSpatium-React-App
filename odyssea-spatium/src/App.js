@@ -35,6 +35,7 @@ class App extends Component {
             <Route  path="/historiquePanier"  component={HPanier}/>
             <Route  path="/historiqueCommentaires"  component={HCommentaires}/>
             <Route  path="/voyage"  component={Voyage}/>
+			<Route 	path="/agenceVoyageTomcat/index.html"	component={Acceuil}/>
             <Route  path="/acceuil"  component={Acceuil}/>
             <Route component={Notfound} />
          

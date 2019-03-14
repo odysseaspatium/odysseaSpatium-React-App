@@ -67,35 +67,28 @@ class NavBar extends Component {
       })
     }
     else{
-      this.setState({
-        error:false
-      })
-      /*
       axios({
         method: 'post',
-        url: 'http://localhost:4000/auth',
-        headers: {
-            'crossDomain': true,  //For cors errors 
-            'Content-Type': 'application/json'
-        },
+        url: Parametres.URL_TOMCAT+'/Connexion',
         data: {
-            login: email,
-            mdp: password
+          email: email,
+          motdepasse:mdp,
         }
-        }).then(res => {
-            if (res.data === "failed"){
-              this.setState({
-                error: true
-              })
-            }
-            
-            else {
-              console.log(res.data);
-              this.onLoginSuccess(res.data.username);
-              this.props.updateuser(res.data.id);
-            }
-        });
-    */
+      }).then(res => {
+        console.log(res);
+        if (res.data === null){
+          this.errorMsg="impossible de s'authentifier";
+          this.setState({
+            error: true
+          })
+        }else {
+          this.setState({
+            error:false
+          });
+          this.props.updateuser(res.data.id);
+          this.onLoginSuccess(res.data.nom + " " +res.data.prenom);
+        }
+      });  
     }
     this.finishLoading();
   }
@@ -117,7 +110,7 @@ class NavBar extends Component {
         error:false
       })
       axios({
-        url: `${Parametres.URL_TOMCAT}/Inscription`,
+        url: Parametres.URL_TOMCAT+'/Inscription',
         method: 'post',
         data: {
           nom: nom,
@@ -126,42 +119,17 @@ class NavBar extends Component {
           motdepasse:mdp,
         }
       }).then(res => {
-        if (res.data === "failed"){
+        if (res.data === ""){
+          this.errorMsg="impossible de s'enregistrer";
           this.setState({
-            errorMsg:"impossible de s'enregistrer",
             error: true
           })
         }else {
+          console.log(res);
           this.props.updateuser(res.data.id);
           this.onLoginSuccess(nom+" "+prenom);
         }  
     });
-      /*
-      axios({
-        method: 'post',
-        url: 'http://localhost:4000/register',
-        headers: {
-            'crossDomain': true,  //For cors errors 
-            'Content-Type': 'application/json'
-        },
-        data: {
-            login: email,
-            mdp: password,
-            prenom: login
-        }
-        }).then(res => {
-            if (res.data === "failed"){
-              this.setState({
-                error: true
-              })
-            }
-            
-            else {
-              this.onLoginSuccess(login);
-            }  
-        });
-      //this.onLoginSuccess('form');
-    */
       
     }
   }
