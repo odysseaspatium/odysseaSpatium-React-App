@@ -4,7 +4,7 @@ import ImageGallery from 'react-image-gallery';
 import {withRouter} from 'react-router-dom';
 import './Voyage.css';
 import { isNullOrUndefined } from 'util';
-const PREFIX_URL = '';
+import * as Parametres from '../../Param';
 
 let image=null;
 
@@ -30,8 +30,8 @@ class Voyage extends Component {
       showGalleryPlayButton: true,
       showNav: false,
       isRTL: false,
-      slideDuration: 450,
-      slideInterval: 4500,
+      slideDuration: Parametres.DUREE_SLIDE,
+      slideInterval: Parametres.INTERVAL_SLIDE,
       showVideo: {},
       showMore:null,
       description:"",
@@ -39,15 +39,15 @@ class Voyage extends Component {
    
     this.images = [
       {
-        original: `${PREFIX_URL}sat_ceinture.jpg`,
+        original: `${Parametres.PREFIX_URL}sat_ceinture.jpg`,
         originalClass: 'featured-slide'
       },
       {
-        original: `${PREFIX_URL}sat_proche.jpg`,
+        original: `${Parametres.PREFIX_URL}sat_proche.jpg`,
         originalClass: 'featured-slide'
       },
       {
-        original: `${PREFIX_URL}sat_rose.jpg`,
+        original: `${Parametres.PREFIX_URL}sat_rose.jpg`,
         originalClass: 'featured-slide',
         description: 'Soirée rose'
       }
@@ -56,16 +56,16 @@ class Voyage extends Component {
   componentDidMount(){
     switch(this.state.id){
       case 1: 
-        image =`${PREFIX_URL}saturn.jpg`;
+        image =`${Parametres.PREFIX_URL}saturn.jpg`;
         this.setState({description:'Voyage pour saturne une opportunité a ne pas louper'});
         break;
       case 2:
-        image =`${PREFIX_URL}kepler-452b.jpg`;
+        image =`${Parametres.PREFIX_URL}kepler-452b.jpg`;
         this.setState({description:'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%'});
         break;
 
       case 3:
-        image =`${PREFIX_URL}exoplanet.jpg`;
+        image =`${Parametres.PREFIX_URL}exoplanet.jpg`;
         this.setState({description:'Planete BRZ, Partez pour bronzer !'});
         break;
 

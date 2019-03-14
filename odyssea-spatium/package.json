@@ -13,7 +13,12 @@
     "react-parallax": "^2.2.0",
     "react-popup": "^0.10.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+	"express":"^4.16.4",
+	"fs":"0.0.1-security",
+	"path":"^0.12.7",
+	"serve":"^10.1.2",
+	"util":"^0.11.1"
   },
   "scripts": {
     "start": "react-scripts start",

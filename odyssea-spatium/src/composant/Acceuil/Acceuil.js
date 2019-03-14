@@ -20,8 +20,8 @@ class Acceuil extends Component {
       showGalleryPlayButton: true,
       showNav: false,
       isRTL: false,
-      slideDuration: 450,
-      slideInterval: 4500,
+      slideDuration: Parametres.DUREE_SLIDE,
+      slideInterval: Parametres.INTERVAL_SLIDE,
       showVideo: {},
       showMore:null,
     };
