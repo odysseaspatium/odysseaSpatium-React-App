@@ -5,21 +5,23 @@ import {withRouter} from 'react-router-dom';
 import './Voyage.css';
 import { isNullOrUndefined } from 'util';
 import * as Parametres from '../../Param';
+import axios from 'axios';
 
-let image=null;
 
 class Voyage extends Component {
   constructor(props) {
     super(props);
     let visiteur=null;
     if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.id_Utilisateur;
+      visiteur = this.props.state.utilisateur;
     }
     
     this.state = {
       history:this.props.history,
-      id:this.props.location.state.id_Voyage,
-      id_Utilisateur:visiteur,
+      id:this.props.location.state.image.id,
+      image:this.props.location.state.image.original,
+      annonce:this.props.location.state.image.description,
+      id_Utilisateur:visiteur.id,
       showIndex: true,
       showBullets: true,
       infinite: true,
@@ -34,45 +36,66 @@ class Voyage extends Component {
       slideInterval: Parametres.INTERVAL_SLIDE,
       showVideo: {},
       showMore:null,
-      description:"",
+      Commentaires:null,
+      prix: null,
+      descriptionVoyage:null,
     };
    
-    this.images = [
-      {
-        original: `${Parametres.PREFIX_URL}sat_ceinture.jpg`,
-        originalClass: 'featured-slide'
-      },
-      {
-        original: `${Parametres.PREFIX_URL}sat_proche.jpg`,
-        originalClass: 'featured-slide'
-      },
-      {
-        original: `${Parametres.PREFIX_URL}sat_rose.jpg`,
-        originalClass: 'featured-slide',
-        description: 'Soirée rose'
+    this.images = []
+}
+  componentWillMount(){
+    axios({
+      url: Parametres.URL_TOMCAT+'/GetImagesVoyage',
+      method: 'post',
+      data: {
+        id_Voyage: this.state.id_Voyage,
       }
-    ]
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        for(let index=0; index<res.data.length;index++){
+          this.images[index].push({
+            original: `${Parametres.PREFIX_URL}${res.data[index].image}`,
+            originalClass: 'featured-slide',
+          });
+        }
+      }
+    });
+    axios({
+      url: Parametres.URL_TOMCAT+'/GetVoyage',
+      method: 'post',
+      data: {
+        id_Voyage: this.state.id_Voyage,
+      }
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        this.setState({descriptionVoyage:res.data[0].descriptionVoyage});
+        this.setState({prix:res.data[0].prix});
+      }
+    });
+    axios({
+      url: Parametres.URL_TOMCAT+'/GetCommentaires',
+      method: 'post',
+      data: {
+        id_Voyage: this.state.id_Voyage,
+      }
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        let data=[];
+        for(let index=0; index<res.data.length;index++){
+          data.push("<p>"+res.data[index].commentaire+"</p>");
+          try{
+            data.push("<img src='"+res.data[index].image+"'></img>");
+          }catch(e){}
+          data.push("<hr/>");
+        }
+        this.setState({Commentaires:data});
+      }
+    });
   }
-  componentDidMount(){
-    switch(this.state.id){
-      case 1: 
-        image =`${Parametres.PREFIX_URL}saturn.jpg`;
-        this.setState({description:'Voyage pour saturne une opportunité a ne pas louper'});
-        break;
-      case 2:
-        image =`${Parametres.PREFIX_URL}kepler-452b.jpg`;
-        this.setState({description:'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%'});
-        break;
 
-      case 3:
-        image =`${Parametres.PREFIX_URL}exoplanet.jpg`;
-        this.setState({description:'Planete BRZ, Partez pour bronzer !'});
-        break;
-
-      default:
-        break;
-    }
-  }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.slideInterval !== prevState.slideInterval ||
         this.state.slideDuration !== prevState.slideDuration) {
@@ -81,12 +104,31 @@ class Voyage extends Component {
     }
     
   }
+  uploadImage(){}
+  uploadCommentaire(){
+    axios({
+      url: Parametres.URL_TOMCAT+'/UploadCommentaire',
+      method: 'post',
+      data: {
+        id_Voyage: this.state.id_Voyage,
+        id_Utilisateur : this.state.id_Utilisateur,
+        commentaire: document.getElementById("commentaire").value,
+      }
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        document.getElementById("Ajouter_Commentaire_retour").innerHTML="Sucess";
+      }
+      document.getElementById("Ajouter_Commentaire_retour").innerHTML="Echec";
+    });
+  }
   _redirect(){
     this.state.history.push({
-      pathname: '/agenceVoyageTomcat/panier',
+      pathname: Parametres.URL_ROUTE+'/panier',
       state :{
         id_Utilisateur:this.id_Utilisateur,
-        id_Voyage:this.id
+        id_Voyage:this.id_Voyage,
+        prix:this.state.prix,
         }
       }
     );
@@ -102,15 +144,16 @@ class Voyage extends Component {
 
     render() {
     
+      const loggedIn=this.state.id_Utilisateur;
       return (
         <div>
           <table className="description-achat-voyage">
           <tbody>
             <tr>
               <td colSpan="3">
-                <Parallax bgImage={image} strength={500} >
+                <Parallax bgImage={this.state.image} strength={500} >
                   <div style={{ height: '400px' }}>
-                    <div className='insideStyles'>{this.state.description}</div>
+                    <div className='insideStyles'>{this.state.annonce}</div>
                   </div>
                 </Parallax>
               </td>
@@ -137,23 +180,17 @@ class Voyage extends Component {
                 </section>
               </td>
               <td>
-                Bla Bla description
-                <br/>
-                Bla
-                <br/>
-                Bla
-                <br/>
-                Bla
-                <br/>
-                Bla
+               {this.state.descriptionVoyage}
               </td>
               <td className="contenant-prix">
                 <div>
-                  Bla Bla prix :
+                  prix :{this.state.prix}
                 </div>
-                <div className='contenant-cadis'>
-                  <button className='image-cadis' type="button"  aria-label="Ajout cadis" onClickCapture={this._redirect.bind(this)}></button>
-                </div>
+                {loggedIn ? (
+                  <div className='contenant-cadis'>
+                    <button className='image-cadis' type="button"  aria-label="Ajout cadis" onClickCapture={this._redirect.bind(this)}></button>
+                  </div>
+                ) :(null)}
               </td>
             </tr>
             </tbody>
@@ -162,25 +199,25 @@ class Voyage extends Component {
             <hr/>
             <br/>
             <table className="description-achat-voyage">
-            <tbody>
-            <tr>
-              <td>
-                <form method="POST">
-                Ajout images:
-                  <input type="file" id="Ajout_image" name="Ajout_image" accept="image/png, image/jpeg"></input>
-                  <input id="Ajouter_image" type="submit" value="Ajouter"></input>
-                </form>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <form method="POST">
-                <p>Ajout commentaire: <input id="Ajouter_Commentaire" type="submit" value="Ajouter"></input></p>
-                <textarea id="commentaires" name="commentaires" rows="5" cols="55"></textarea>
-                </form>
-              </td>
-            </tr>
-            </tbody>
+            {loggedIn ? (
+                <tbody>
+                <tr>
+                  <td>
+                    <p>Ajout commentaire: <button id="Ajouter_Commentaire" type="submit" value="Ajouter" onClick={this.uploadCommentaire}></button></p>
+                    <p id="Ajouter_Commentaire_retour"></p>
+                    <textarea id="commentaire" name="commentaire" rows="5" cols="55"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <p> Ajout images a votre commentaire:</p>
+                    <input type="file" id="Ajout_image" name="Ajout_image" accept="image/png, image/jpeg"></input>
+                  </td>
+                </tr>
+                </tbody>
+              ) : (
+                null
+              )}
             </table>
             <br/>
             <hr/>
@@ -190,10 +227,7 @@ class Voyage extends Component {
                 Commentaires:
               </p>
               <div>
-                bla <br/>
-                bla <br/>
-                bla <br/>
-                bla <br/>
+              {this.state.Commentaires}
               </div>
             </div>
         </div>

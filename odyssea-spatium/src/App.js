@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+import * as Parametres from './Param';
 import './App.css';
 
 
@@ -17,26 +18,26 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      id_Utilisateur:null,
+      utilisateur:null,
     }
   }
   updateuser = (id) => {
-    this.setState({ id_Utilisateur: id });
+    this.setState({ utilisateur: id });
   }
   render() {
     return (
-      <Router history={createBrowserHistory()} id_Utilisateur={this.state.id_Utilisateur} >
+      <Router history={createBrowserHistory()} utilisateur={this.state.utilisateur} >
       <div>
           <NavBar updateuser={this.updateuser} />
           <Switch>
             <Route exact path="/" component={Acceuil} />
-            <Route  path="/agenceVoyageTomcat/index.html" component={Acceuil} />
-            <Route  path="/agenceVoyageTomcat/panier" component={Panier} />
-            <Route  path="/agenceVoyageTomcat/historique"  component={Historique}/>
-            <Route  path="/agenceVoyageTomcat/historiquePanier"  component={HPanier}/>
-            <Route  path="/agenceVoyageTomcat/historiqueCommentaires"  component={HCommentaires}/>
-            <Route  path="/agenceVoyageTomcat/voyage"  component={Voyage}/>
-            <Route  path="/agenceVoyageTomcat/acceuil"  component={Acceuil}/>
+            <Route  path={Parametres.URL_ROUTE+"/index.html"} component={Acceuil} />
+            <Route  path={Parametres.URL_ROUTE+"/panier"} component={Panier} />
+            <Route  path={Parametres.URL_ROUTE+"/historique"}  component={Historique}/>
+            <Route  path={Parametres.URL_ROUTE+"/historiquePanier"}  component={HPanier}/>
+            <Route  path={Parametres.URL_ROUTE+"/historiqueCommentaires"}  component={HCommentaires}/>
+            <Route  path={Parametres.URL_ROUTE+"/voyage"}  component={Voyage}/>
+            <Route  path={Parametres.URL_ROUTE+"/acceuil"}  component={Acceuil}/>
             <Route component={Notfound} />
          
           </Switch>

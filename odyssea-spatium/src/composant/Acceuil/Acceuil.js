@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ImageGallery from 'react-image-gallery';
 import {withRouter} from 'react-router-dom';
+import axios from 'axios';
 import './Acceuil.css';
 import '../../../node_modules/react-image-gallery/styles/css/image-gallery.css';
 import * as Parametres from '../../Param';
@@ -25,31 +26,29 @@ class Acceuil extends Component {
       showVideo: {},
       showMore:null,
     };
-    this.images = [
-      {
-        id:1,
-        original: `${Parametres.PREFIX_URL}saturn.jpg`,
-        originalClass: 'featured-slide',
-        description: 'Voyage pour saturne une opportunité a ne pas louper',
-        onclick:this._redirect
-      },
-      {
-        id:2,
-        original: `${Parametres.PREFIX_URL}kepler-452b.jpg`,
-        originalClass: 'featured-slide',
-        description: 'Le nouvel eldorado kepler-452b, 100 premiers vols a 50%',
-        onclick:this._redirect
-      },
-      {
-        id:3,
-        original: `${Parametres.PREFIX_URL}exoplanet.jpg`,
-        originalClass: 'featured-slide',
-        description: 'Planete BRZ, Partez pour bronzer !',
-        onclick:this._redirect
-      }
-    ]
+    this.images = [];
+     
   }
-  
+  componentWillMount(){
+    axios({
+      url: Parametres.URL_TOMCAT+'/ImagesAcceuil',
+      method: 'post',
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        for(let index=0; index<res.data.length;index++){
+          this.images[index].push({
+            id:res.data[index].id,
+            original: `${Parametres.PREFIX_URL}${res.data[index].image}`,
+            originalClass: 'featured-slide',
+            annonce:res.data[index].description,
+            onclick:this._redirect
+          })
+        }
+      }
+    });
+   
+  }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.slideInterval !== prevState.slideInterval ||
         this.state.slideDuration !== prevState.slideDuration) {
@@ -59,10 +58,12 @@ class Acceuil extends Component {
   }
   _redirect(){
     let index = this._imageGallery.getCurrentIndex();
-    let id_Voyage_Courant = this.images[index].id;
+    let image_Voyage_Courant = this.images[index];
     this.state.history.push({
-      pathname: '/agenceVoyageTomcat/voyage',
-      state :{id_Voyage:id_Voyage_Courant}
+      pathname: Parametres.URL_ROUTE+'/voyage',
+      state :{
+        image:image_Voyage_Courant,
+        }
       }
     );
   }

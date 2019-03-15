@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { isNullOrUndefined } from 'util';
 import {withRouter} from 'react-router-dom';
+import * as Parametres from '../../../Param';
+import axios from 'axios';
 import './H-Commentaires.css';
 
 class HCommentaires extends Component {
@@ -9,21 +11,49 @@ class HCommentaires extends Component {
     let visiteur=null;
     console.log(this.props);
     if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.id_Utilisateur;
+      visiteur = this.props.state.utilisateur;
     }
     this.state = {
       history:this.props.history,
-      id_Utilisateur:visiteur,
+      id_Utilisateur:visiteur.id,
+      Commentaires:null,
     }
   }
+  componentWillMount(){
+    axios({
+      url: Parametres.URL_TOMCAT+'/RecupererCommentaires',
+      method: 'post',
+      data: {
+        id_Utilisateur : this.state.id_Utilisateur,
+      }
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        let data=[];
+        for(let index=0; index<res.data.length;index++){
+          data.push("<p>"+res.data[index].commentaire+"</p>");
+          try{
+            data.push("<img src='"+res.data[index].image+"'></img>");
+          }catch(e){}
+          data.push("<hr/>");
+        }
+        this.setState({Commentaires:data});
+      }
+    });
+  }
     render() {
+      const loggedIn=this.state.id_Utilisateur;
     
       return (
         <div>
+        {loggedIn ? (
+          <div>
           <div>Historique Commentaire</div>
           <hr/>
-          <div></div>
-        </div>
+          <div>{this.state.Commentaires}</div>
+          </div>
+          ):(this.state.history.push({pathname:Parametres.URL_ROUTE+'/404'}))};
+      </div>
       );
     }
   }

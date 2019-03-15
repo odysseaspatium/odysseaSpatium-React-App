@@ -6,7 +6,7 @@ class NotFound extends Component {
     
       return (
   
-        <div>404</div>
+        <div> - 404 - Vous vous êtes perdus dans un trou noir du site :-/</div>
       );
     }
   }

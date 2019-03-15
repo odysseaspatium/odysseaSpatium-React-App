@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Nav, Navbar, Form, Button} from 'react-bootstrap';
 import ReactModalLogin from "react-modal-login";
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './NavBar.css';
 import * as Parametres from '../../Param';
 
@@ -126,7 +126,7 @@ class NavBar extends Component {
           })
         }else {
           console.log(res);
-          this.props.updateuser(res.data.id);
+          this.props.updateuser(res.data);
           this.onLoginSuccess(nom+" "+prenom);
         }  
     });
@@ -215,9 +215,14 @@ class NavBar extends Component {
           <Navbar.Brand href="/">Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
             <li className="Lien"><Link to="/agenceVoyageTomcat/acceuil">Acceuil</Link></li>
-            <li className="Lien"><Link to="/agenceVoyageTomcat/Historique">Historique</Link></li>
-            <li className="Lien"><Link to="/agenceVoyageTomcat/Panier">Panier</Link></li>
+            {loggedIn ? (
+              <>
+                <li className="Lien"><Link to="/agenceVoyageTomcat/Historique">Historique</Link></li>
+                <li className="Lien"><Link to="/agenceVoyageTomcat/Panier">Panier</Link></li>
+              </>
+              ) : (null)}
           </Nav>
+          
           {loggedIn ? (
             <div className="login">
               {loggedIn}
