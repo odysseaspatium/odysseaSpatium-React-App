@@ -42,18 +42,13 @@ class HCommentaires extends Component {
     });
   }
     render() {
-      const loggedIn=this.state.id_Utilisateur;
     
       return (
-        <div>
-        {loggedIn ? (
           <div>
-          <div>Historique Commentaire</div>
-          <hr/>
-          <div>{this.state.Commentaires}</div>
+            <div>Historique Commentaire</div>
+            <hr/>
+            <div>{this.state.Commentaires}</div>
           </div>
-          ):(this.state.history.push({pathname:Parametres.URL_ROUTE+'/404'}))};
-      </div>
       );
     }
   }

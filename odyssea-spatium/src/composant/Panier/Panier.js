@@ -59,29 +59,22 @@ class Panier extends Component {
       }
     }).then(res => {
       this.state.history.push({
-        pathname: Parametres.URL_ROUTE+'/acceuil',
+        pathname: Parametres.PREFIX_URL+'/acceuil',
       });
     });
   }
     render() {
-      const loggedIn=this.state.id_Utilisateur;
     
       return (
+        <div>
+          <div>Panier</div>
+          <hr/>
           <div>
-          {loggedIn ? (
-            <div>
-              <div>Panier</div>
-              <hr/>
-              <div>
-                {this.state.panier}
-              </div>
-              <div>                 
-                <button id="Valider_Panier" type="submit" value="Valider" onClick={this.validerPanier}></button>
-              </div>
-            </div>
-           ) : (
-            this.state.history.push({pathname:Parametres.URL_ROUTE+'/404'})
-           )}
+            {this.state.panier}
+          </div>
+          <div>                 
+            <button id="Valider_Panier" type="submit" value="Valider" onClick={this.validerPanier}></button>
+          </div>
         </div>
       );
     }

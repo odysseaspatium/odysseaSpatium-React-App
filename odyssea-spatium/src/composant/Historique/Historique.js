@@ -19,7 +19,7 @@ class Historique extends Component {
   }
   redirectCommentaires(){
     this.state.history.push({
-      pathname:Parametres.URL_ROUTE+'/historiqueCommentaires',
+      pathname:Parametres.PREFIX_URL+'/historiqueCommentaires',
       id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })
@@ -27,17 +27,14 @@ class Historique extends Component {
   }
   redirectPaniers(){
     this.state.history.push({
-      pathname:Parametres.URL_ROUTE+'/historiquePanier',
+      pathname:Parametres.PREFIX_URL+'/historiquePanier',
       id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })
   }
     render() {
     
-      const loggedIn=this.state.id_Utilisateur;
       return (
-        <div>
-          {loggedIn ? (
             <table>
               <thead>
                 <tr>
@@ -61,8 +58,6 @@ class Historique extends Component {
                 </tr>
               </tbody>
             </table>
-          ):(this.state.history.push({pathname:Parametres.URL_ROUTE+'/404'}))};
-        </div>
       );
     }
   }

@@ -41,20 +41,12 @@ class HPaniers extends Component {
     });
   }
     render() {
-      const loggedIn=this.state.id_Utilisateur;
-    
       return (
-        <div>
-        {loggedIn ? (
           <div>
             <div>Historique Panier</div>
             <hr/>
             <div>{this.state.panier}</div>
           </div>
-          ):(
-            this.state.history.push({pathname:Parametres.URL_ROUTE+'/404'}
-            ))};
-      </div>
       );
     }
   }

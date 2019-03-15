@@ -60,7 +60,7 @@ class Acceuil extends Component {
     let index = this._imageGallery.getCurrentIndex();
     let image_Voyage_Courant = this.images[index];
     this.state.history.push({
-      pathname: Parametres.URL_ROUTE+'/voyage',
+      pathname: Parametres.PREFIX_URL+'/voyage',
       state :{
         image:image_Voyage_Courant,
         }

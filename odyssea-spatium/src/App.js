@@ -21,23 +21,28 @@ class App extends Component {
       utilisateur:null,
     }
   }
-  updateuser = (id) => {
-    this.setState({ utilisateur: id });
+  updateuser = (utilisateur) => {
+    this.setState({ utilisateur: utilisateur });
   }
   render() {
+    const loggedIn=this.state.utilisateur;
     return (
       <Router history={createBrowserHistory()} utilisateur={this.state.utilisateur} >
       <div>
           <NavBar updateuser={this.updateuser} />
           <Switch>
             <Route exact path="/" component={Acceuil} />
-            <Route  path={Parametres.URL_ROUTE+"/index.html"} component={Acceuil} />
-            <Route  path={Parametres.URL_ROUTE+"/panier"} component={Panier} />
-            <Route  path={Parametres.URL_ROUTE+"/historique"}  component={Historique}/>
-            <Route  path={Parametres.URL_ROUTE+"/historiquePanier"}  component={HPanier}/>
-            <Route  path={Parametres.URL_ROUTE+"/historiqueCommentaires"}  component={HCommentaires}/>
-            <Route  path={Parametres.URL_ROUTE+"/voyage"}  component={Voyage}/>
-            <Route  path={Parametres.URL_ROUTE+"/acceuil"}  component={Acceuil}/>
+            <Route  path={Parametres.PREFIX_URL+"/index.html"} component={Acceuil} />
+            <Route  path={Parametres.PREFIX_URL+"/voyage"}  component={Voyage}/>
+            {loggedIn ? (
+              <>
+              <Route  path={Parametres.PREFIX_URL+"/panier"} component={Panier} />
+              <Route  path={Parametres.PREFIX_URL+"/historique"}  component={Historique}/>
+              <Route  path={Parametres.PREFIX_URL+"/historiquePanier"}  component={HPanier}/>
+              <Route  path={Parametres.PREFIX_URL+"/historiqueCommentaires"}  component={HCommentaires}/>
+              </>
+            ) : (null)}
+            <Route  path={Parametres.PREFIX_URL+"/acceuil"}  component={Acceuil}/>
             <Route component={Notfound} />
          
           </Switch>

@@ -124,7 +124,7 @@ class Voyage extends Component {
   }
   _redirect(){
     this.state.history.push({
-      pathname: Parametres.URL_ROUTE+'/panier',
+      pathname: Parametres.PREFIX_URL+'/panier',
       state :{
         id_Utilisateur:this.id_Utilisateur,
         id_Voyage:this.id_Voyage,
