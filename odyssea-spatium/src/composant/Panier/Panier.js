@@ -24,26 +24,18 @@ class Panier extends Component {
   }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/AjoutPanier',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
       data: {
-        id_Voyage: this.state.id_Voyage,
-        id_Utilisateur : this.state.id_Utilisateur,
-        id_Panier : this.state.id_Panier,
-      }
-    });
-    axios({
-      url: Parametres.URL_TOMCAT+'/RecupererPanier',
-      method: 'post',
-      data: {
-        id_Panier : this.state.id_Panier,
+        id_panier : this.state.id_Panier,
+        route: 'Panier/contenu',
       }
     }).then(res => {
       if (res.data !== ""){
         console.log(res);
         let data=[];
         for(let index=0; index<res.data.length;index++){
-          data.push("<p>"+res.data[index].annonce+"</p><hr/>");
+          data.push("<p>"+res.data[index].nom_voyage+"</p><p>"+res.data[index].prix_voyage+"</p><hr/>");
         }
         this.setState({panier:data});
       }
@@ -51,11 +43,11 @@ class Panier extends Component {
   }
   validerPanier(){
     axios({
-      url: Parametres.URL_TOMCAT+'/ValiderPanier',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
       data: {
-        id_Utilisateur : this.state.id_Utilisateur,
-        id_Panier : this.state.id_Panier,
+        id_panier : this.state.id_Panier,
+        route: 'Panier/valider'
       }
     }).then(res => {
       this.state.history.push({

@@ -39,55 +39,60 @@ class Voyage extends Component {
       Commentaires:null,
       prix: null,
       descriptionVoyage:null,
+      id_panier:null,
     };
    
     this.images = []
 }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/GetImagesVoyage',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
       data: {
-        id_Voyage: this.state.id_Voyage,
+        id_utilisateur : this.state.id_Utilisateur,
+        route: 'Panier/idPanier',
+      }
+    }).then(res => {
+      if (res.data !== ""){
+        console.log(res);
+        this.setState({id_panier:res.data[0].id_panier});
+      }
+    });
+    axios({
+      url: Parametres.URL_TOMCAT+'/',
+      method: 'post',
+      data: {
+        id_voyage: this.state.id_Voyage,
+        route:'Voyage/getVoyage',
       }
     }).then(res => {
       if (res.data !== ""){
         console.log(res);
         for(let index=0; index<res.data.length;index++){
           this.images[index].push({
-            original: `${Parametres.PREFIX_URL}${res.data[index].image}`,
+            original: `${Parametres.PREFIX_URL}${res.data[index].lien_photos_voyage}`,
             originalClass: 'featured-slide',
           });
         }
+        this.setState({descriptionVoyage:res.data[0].description_voyage});
+        this.setState({prix:res.data[0].prix_voyage});
       }
     });
     axios({
-      url: Parametres.URL_TOMCAT+'/GetVoyage',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
       data: {
-        id_Voyage: this.state.id_Voyage,
-      }
-    }).then(res => {
-      if (res.data !== ""){
-        console.log(res);
-        this.setState({descriptionVoyage:res.data[0].descriptionVoyage});
-        this.setState({prix:res.data[0].prix});
-      }
-    });
-    axios({
-      url: Parametres.URL_TOMCAT+'/GetCommentaires',
-      method: 'post',
-      data: {
-        id_Voyage: this.state.id_Voyage,
+        id_voyage: this.state.id_Voyage,
+        route:'Commentaire/getCommentaire'
       }
     }).then(res => {
       if (res.data !== ""){
         console.log(res);
         let data=[];
         for(let index=0; index<res.data.length;index++){
-          data.push("<p>"+res.data[index].commentaire+"</p>");
+          data.push("<p>"+res.data[index].texte_commentaire+"</p>");
           try{
-            data.push("<img src='"+res.data[index].image+"'></img>");
+            data.push("<img src='"+res.data[index].lien_photos_commentaire+"'></img>");
           }catch(e){}
           data.push("<hr/>");
         }
@@ -107,12 +112,13 @@ class Voyage extends Component {
   uploadImage(){}
   uploadCommentaire(){
     axios({
-      url: Parametres.URL_TOMCAT+'/UploadCommentaire',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
       data: {
-        id_Voyage: this.state.id_Voyage,
-        id_Utilisateur : this.state.id_Utilisateur,
+        id_voyage: this.state.id_Voyage,
+        id_utilisateur : this.state.id_Utilisateur,
         commentaire: document.getElementById("commentaire").value,
+        route:'Commentaire/addCommentaire',
       }
     }).then(res => {
       if (res.data !== ""){
@@ -123,6 +129,15 @@ class Voyage extends Component {
     });
   }
   _redirect(){
+    axios({
+      url: Parametres.URL_TOMCAT+'/',
+      method: 'post',
+      data: {
+        id_panier : this.state.id_panier,
+        id_voyage: this.state.id_Voyage,
+        route:'Article/ajoutVoyage'
+      }
+    });
     this.state.history.push({
       pathname: Parametres.PREFIX_URL+'/panier',
       state :{

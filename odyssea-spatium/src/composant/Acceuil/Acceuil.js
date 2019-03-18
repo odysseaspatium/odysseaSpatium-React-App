@@ -31,17 +31,20 @@ class Acceuil extends Component {
   }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/ImagesAcceuil',
+      url: Parametres.URL_TOMCAT+'/',
       method: 'post',
+      data: {
+        route: 'Voyage/getTousVoyages'
+      }
     }).then(res => {
       if (res.data !== ""){
         console.log(res);
         for(let index=0; index<res.data.length;index++){
           this.images[index].push({
-            id:res.data[index].id,
-            original: `${Parametres.PREFIX_URL}${res.data[index].image}`,
+            id:res.data[index].id_voyage,
+            original: `${Parametres.PREFIX_URL}${res.data[index].lien_photo_annonce}`,
             originalClass: 'featured-slide',
-            annonce:res.data[index].description,
+            annonce:res.data[index].annonce_voyage,
             onclick:this._redirect
           })
         }
