@@ -31,7 +31,7 @@ class Acceuil extends Component {
   }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         route: 'Voyage/getTousVoyages'

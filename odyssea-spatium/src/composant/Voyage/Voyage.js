@@ -46,7 +46,7 @@ class Voyage extends Component {
 }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         id_utilisateur : this.state.id_Utilisateur,
@@ -59,7 +59,7 @@ class Voyage extends Component {
       }
     });
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         id_voyage: this.state.id_Voyage,
@@ -79,7 +79,7 @@ class Voyage extends Component {
       }
     });
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         id_voyage: this.state.id_Voyage,
@@ -112,7 +112,7 @@ class Voyage extends Component {
   uploadImage(){}
   uploadCommentaire(){
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         id_voyage: this.state.id_Voyage,
@@ -130,7 +130,7 @@ class Voyage extends Component {
   }
   _redirect(){
     axios({
-      url: Parametres.URL_TOMCAT+'/',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
         id_panier : this.state.id_panier,
