@@ -212,7 +212,7 @@ class NavBar extends Component {
       
       <div>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Odyssea Spatium</Navbar.Brand>
+          <Navbar.Brand href={Parametres.PREFIX_URL+"/acceuil"}>Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
             <li className="Lien"><Link to={Parametres.PREFIX_URL+"/acceuil"}>Acceuil</Link></li>
             {loggedIn ? (

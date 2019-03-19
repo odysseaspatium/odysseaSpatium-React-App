@@ -25,6 +25,7 @@ class Acceuil extends Component {
       slideInterval: Parametres.INTERVAL_SLIDE,
       showVideo: {},
       showMore:null,
+      voyages:null,
     };
     this.images = [];
      
@@ -38,19 +39,19 @@ class Acceuil extends Component {
       }
     }).then(res => {
       if (res.data !== ""){
-        console.log(res);
         for(let index=0; index<res.data.length;index++){
-          this.images[index].push({
+          this.setState({voyages:res.data});
+          this.images.push({
             id:res.data[index].id_voyage,
-            original: `${Parametres.PREFIX_URL}${res.data[index].lien_photo_annonce}`,
+            original:res.data[index].lien_photo_annonce[0],
             originalClass: 'featured-slide',
-            annonce:res.data[index].annonce_voyage,
+            description:res.data[index].annonce_voyage,
             onclick:this._redirect
-          })
-        }
+          });
+        }  
+        console.log(this.images);
       }
     });
-   
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.slideInterval !== prevState.slideInterval ||
@@ -61,11 +62,10 @@ class Acceuil extends Component {
   }
   _redirect(){
     let index = this._imageGallery.getCurrentIndex();
-    let image_Voyage_Courant = this.images[index];
     this.state.history.push({
       pathname: Parametres.PREFIX_URL+'/voyage',
       state :{
-        image:image_Voyage_Courant,
+        image:this.state.voyages[index],
         }
       }
     );

@@ -21,8 +21,8 @@ class App extends Component {
       utilisateur:null,
     }
   }
-  updateuser = (utilisateur) => {
-    this.setState({ utilisateur: utilisateur });
+  updateuser = (updateuser) => {
+    this.setState({ utilisateur: updateuser });
   }
   render() {
     const loggedIn=this.state.utilisateur;
@@ -32,6 +32,7 @@ class App extends Component {
           <NavBar updateuser={this.updateuser} />
           <Switch>
             <Route exact path="/" component={Acceuil} />
+            <Route  path={Parametres.PREFIX_URL+"/acceuil"}  component={Acceuil}/>
             <Route  path={Parametres.PREFIX_URL+"/index.html"} component={Acceuil} />
             <Route  path={Parametres.PREFIX_URL+"/voyage"}  component={Voyage}/>
             {loggedIn ? (
@@ -42,7 +43,6 @@ class App extends Component {
               <Route  path={Parametres.PREFIX_URL+"/historiqueCommentaires"}  component={HCommentaires}/>
               </>
             ) : (null)}
-            <Route  path={Parametres.PREFIX_URL+"/acceuil"}  component={Acceuil}/>
             <Route component={Notfound} />
          
           </Switch>

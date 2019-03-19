@@ -13,15 +13,17 @@ class Voyage extends Component {
     super(props);
     let visiteur=null;
     if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur;
+      visiteur = this.props.state.utilisateur.id;
     }
+    console.log(this.props.location.state)
     
     this.state = {
       history:this.props.history,
-      id:this.props.location.state.image.id,
-      image:this.props.location.state.image.original,
-      annonce:this.props.location.state.image.description,
-      id_Utilisateur:visiteur.id,
+      id_Voyage:this.props.location.state.image.id_voyage,
+      image_annonce:this.props.location.state.image.lien_photo_annonce,
+      images_voyages:this.props.location.state.image.lien_photos_voyage,
+      annonce:this.props.location.state.image.annonce_voyage,
+      id_Utilisateur:visiteur,
       showIndex: true,
       showBullets: true,
       infinite: true,
@@ -37,14 +39,21 @@ class Voyage extends Component {
       showVideo: {},
       showMore:null,
       Commentaires:null,
-      prix: null,
-      descriptionVoyage:null,
+      prix: this.props.location.state.image.prix_voyage,
+      descriptionVoyage:this.props.location.state.image.description_voyage,
       id_panier:null,
     };
-   
-    this.images = []
+    this.image=[];
+    console.log(this.state)
 }
   componentWillMount(){
+    for(let index=0;index<this.state.images_voyages.length;index++){
+      this.image.push({ 
+        original:this.state.images_voyages[index],
+        originalClass: 'featured-slide',
+      })
+    }
+    console.log(this.image)
     axios({
       url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
@@ -56,26 +65,6 @@ class Voyage extends Component {
       if (res.data !== ""){
         console.log(res);
         this.setState({id_panier:res.data[0].id_panier});
-      }
-    });
-    axios({
-      url: Parametres.URL_TOMCAT+'/Bridge',
-      method: 'post',
-      data: {
-        id_voyage: this.state.id_Voyage,
-        route:'Voyage/getVoyage',
-      }
-    }).then(res => {
-      if (res.data !== ""){
-        console.log(res);
-        for(let index=0; index<res.data.length;index++){
-          this.images[index].push({
-            original: `${Parametres.PREFIX_URL}${res.data[index].lien_photos_voyage}`,
-            originalClass: 'featured-slide',
-          });
-        }
-        this.setState({descriptionVoyage:res.data[0].description_voyage});
-        this.setState({prix:res.data[0].prix_voyage});
       }
     });
     axios({
@@ -141,8 +130,8 @@ class Voyage extends Component {
     this.state.history.push({
       pathname: Parametres.PREFIX_URL+'/panier',
       state :{
-        id_Utilisateur:this.id_Utilisateur,
-        id_Voyage:this.id_Voyage,
+        id_Utilisateur:this.state.id_Utilisateur,
+        id_Voyage:this.state.id_Voyage,
         prix:this.state.prix,
         }
       }
@@ -166,7 +155,7 @@ class Voyage extends Component {
           <tbody>
             <tr>
               <td colSpan="3">
-                <Parallax bgImage={this.state.image} strength={500} >
+                <Parallax bgImage={this.state.image_annonce} strength={500} >
                   <div style={{ height: '400px' }}>
                     <div className='insideStyles'>{this.state.annonce}</div>
                   </div>
@@ -178,7 +167,7 @@ class Voyage extends Component {
                 <section>
                   <ImageGallery
                     ref={i => this._imageGallery = i}
-                    items={this.images}
+                    items={this.image}
                     lazyLoad={false}
                     autoPlay={true}
                     infinite={this.state.infinite}
