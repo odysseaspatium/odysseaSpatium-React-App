@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Parallax } from 'react-parallax';
 import ImageGallery from 'react-image-gallery';
 import {withRouter} from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import fr from 'date-fns/locale/fr';
 import './Voyage.css';
 import { isNullOrUndefined } from 'util';
 import * as Parametres from '../../Param';
@@ -13,7 +15,7 @@ class Voyage extends Component {
     super(props);
     let visiteur=null;
     if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur.id;
+      visiteur = this.props.state.utilisateur.id_user;
     }
     console.log(this.props.location.state)
     
@@ -23,6 +25,8 @@ class Voyage extends Component {
       image_annonce:this.props.location.state.image.lien_photo_annonce,
       images_voyages:this.props.location.state.image.lien_photos_voyage,
       annonce:this.props.location.state.image.annonce_voyage,
+      dateDebut:this.props.location.state.image.dateDebut_voyage,
+      dateFin:this.props.location.state.image.dateFin_voyage,
       id_Utilisateur:visiteur,
       showIndex: true,
       showBullets: true,
@@ -89,7 +93,16 @@ class Voyage extends Component {
       }
     });
   }
-
+  componentDidMount(){
+    var aujourdhui = new Date().getDate();
+    console.log(aujourdhui);
+    console.log(this.state.dateFin);
+    if(aujourdhui<=this.state.dateFin){
+      document.getElementById("tab_ajout_commentaire").style.display="none";
+    }else{
+      document.getElementById("tab_ajout_commentaire").style.display="block";
+    }
+  }
   componentDidUpdate(prevProps, prevState) {
     if (this.state.slideInterval !== prevState.slideInterval ||
         this.state.slideDuration !== prevState.slideDuration) {
@@ -98,8 +111,11 @@ class Voyage extends Component {
     }
     
   }
-  uploadImage(){}
   uploadCommentaire(){
+    let imageCommentaire =[];
+    if(document.getElementById("Ajout_image").value!=null)
+      imageCommentaire.push(document.getElementById("Ajout_image").value);
+    console.log(imageCommentaire);
     axios({
       url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
@@ -108,6 +124,7 @@ class Voyage extends Component {
         id_utilisateur : this.state.id_Utilisateur,
         commentaire: document.getElementById("commentaire").value,
         route:'Commentaire/addCommentaire',
+        image:imageCommentaire,
       }
     }).then(res => {
       if (res.data !== ""){
@@ -184,7 +201,9 @@ class Voyage extends Component {
                 </section>
               </td>
               <td>
-               {this.state.descriptionVoyage}
+                <p>Debut: <DatePicker selected={this.state.dateDebut} readOnly={true} locale={fr}/></p>
+                <p>Fin prevue:<DatePicker selected={this.state.dateFin} readOnly={true} locale={fr}/></p>
+                <p>{this.state.descriptionVoyage}</p>
               </td>
               <td className="contenant-prix">
                 <div>
@@ -202,12 +221,12 @@ class Voyage extends Component {
             <br/>
             <hr/>
             <br/>
-            <table className="description-achat-voyage">
+            <table className="description-achat-voyage" id="tab_ajout_commentaire">
             {loggedIn ? (
                 <tbody>
                 <tr>
                   <td>
-                    <p>Ajout commentaire: <button id="Ajouter_Commentaire" type="submit" value="Ajouter" onClick={this.uploadCommentaire}></button></p>
+                    <p>Ajout commentaire: <button id="Ajouter_Commentaire" type="submit" onClick={this.uploadCommentaire}>Ajouter Commentaire</button></p>
                     <p id="Ajouter_Commentaire_retour"></p>
                     <textarea id="commentaire" name="commentaire" rows="5" cols="55"></textarea>
                   </td>

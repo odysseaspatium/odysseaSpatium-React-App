@@ -73,3 +73,6 @@ textarea{
     resize: none !important;
     vertical-align: baseline !important;
 }
+.datepick{
+    width: 200px !important;
+}

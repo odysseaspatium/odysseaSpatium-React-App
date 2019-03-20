@@ -15,7 +15,7 @@ class Panier extends Component {
     }
     this.state = {
       history:this.props.history,
-      id_Utilisateur:visiteur.id,
+      id_Utilisateur:visiteur.id_user,
       id_Voyage:this.props.state.id_Voyage,
       prix:this.tprops.state.prix,
       panier:null,
