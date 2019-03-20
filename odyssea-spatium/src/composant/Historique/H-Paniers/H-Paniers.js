@@ -8,15 +8,9 @@ import './H-Paniers.css';
 class HPaniers extends Component {
   constructor(props) {
     super(props);
-    let visiteur=null;
-    console.log(this.props);
-    if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur;
-    }
     this.state = {
       history:this.props.history,
-      id_Utilisateur:visiteur.id,
-      id_Panier:visiteur.id_Panier,
+      Utilisateur:sessionStorage.getItem("utilisateur"),
       panier:null,
     }
   }
@@ -26,8 +20,8 @@ class HPaniers extends Component {
       url: Parametres.URL_TOMCAT+'/RecupererPanier',
       method: 'post',
       data: {
-        id_Utilisateur : this.state.id_Utilisateur,
-        id_Panier : this.state.id_Panier,
+        id_Utilisateur : this.state.Utilisateur.id_user,
+        id_Panier : this.state.Utilisateur.id_panier_user,
       }
     }).then(res => {
       if (res.data !== ""){

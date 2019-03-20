@@ -18,16 +18,13 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      utilisateur:null,
+      utilisateur:sessionStorage.getItem("id_Utilisateur"),
     }
-  }
-  updateuser = (updateuser) => {
-    this.setState({ utilisateur: updateuser });
   }
   render() {
     const loggedIn=this.state.utilisateur;
     return (
-      <Router history={createBrowserHistory()} utilisateur={this.state.utilisateur} >
+      <Router history={createBrowserHistory()} >
       <div>
           <NavBar updateuser={this.updateuser} />
           <Switch>

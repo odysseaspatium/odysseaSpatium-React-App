@@ -8,26 +8,22 @@ import './Panier.css';
 class Panier extends Component {
   constructor(props) {
     super(props);
-    let visiteur=null;
-    console.log(this.props);
-    if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur;
-    }
     this.state = {
       history:this.props.history,
-      id_Utilisateur:visiteur.id_user,
+      Utilisateur:sessionStorage.getItem("utilisateur"),
       id_Voyage:this.props.state.id_Voyage,
       prix:this.tprops.state.prix,
       panier:null,
-      id_Panier:visiteur.id_panier,
     }
   }
   componentWillMount(){
+    console.log(this.state.Utilisateur);
+    
     axios({
       url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
-        id_panier : this.state.id_Panier,
+        id_panier : this.state.Utilisateur.id_panier_user,
         route: 'Panier/contenu',
       }
     }).then(res => {
@@ -46,7 +42,7 @@ class Panier extends Component {
       url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
-        id_panier : this.state.id_Panier,
+        id_panier : this.state.Utilisateur.id_panier_user,
         route: 'Panier/valider'
       }
     }).then(res => {

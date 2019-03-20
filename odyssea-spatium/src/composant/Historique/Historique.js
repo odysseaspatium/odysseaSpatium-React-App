@@ -7,20 +7,14 @@ import './Historique.css';
 class Historique extends Component {
   constructor(props) {
     super(props);
-    let visiteur=null;
-    console.log(this.props);
-    if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur;
-    }
     this.state = {
       history:this.props.history,
-      id_Utilisateur:visiteur.id,
+      Utilisateur:sessionStorage.getItem("utilisateur"),
     }
   }
   redirectCommentaires(){
     this.state.history.push({
       pathname:Parametres.PREFIX_URL+'/historiqueCommentaires',
-      id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })
 
@@ -28,7 +22,6 @@ class Historique extends Component {
   redirectPaniers(){
     this.state.history.push({
       pathname:Parametres.PREFIX_URL+'/historiquePanier',
-      id_Utilisateur:this.state.id_Utilisateur,
       history:this.state.history
     })
   }

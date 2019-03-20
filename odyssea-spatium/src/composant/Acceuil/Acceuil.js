@@ -19,6 +19,7 @@ class Acceuil extends Component {
       showGalleryFullscreenButton: true,
       showPlayButton: true,
       showGalleryPlayButton: true,
+      Utilisateur:sessionStorage.getItem("utilisateur"),
       showNav: false,
       isRTL: false,
       slideDuration: Parametres.DUREE_SLIDE,

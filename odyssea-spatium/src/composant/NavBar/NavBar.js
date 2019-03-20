@@ -54,7 +54,15 @@ class NavBar extends Component {
       errorMsg: null,
       recoverPasswordSuccess: null,
     };
+    let data =JSON.parse(sessionStorage.getItem("utilisateur"));
+    try{
+      this.setState({loggedIn:data.nom +" "+data.prenom});
+    }catch{
+
+    }
+    console.log(this.state);
   }
+  
   onLogin() {
     this.startLoading();
    
@@ -85,7 +93,7 @@ class NavBar extends Component {
           this.setState({
             error:false
           });
-          this.props.updateuser(res.data.id);
+          sessionStorage.setItem("utilisateur",JSON.stringify(res.data));
           this.onLoginSuccess(res.data.nom + " " +res.data.prenom);
         }
       });  
@@ -125,8 +133,7 @@ class NavBar extends Component {
             error: true
           })
         }else {
-          console.log(res);
-          this.props.updateuser(res.data);
+          sessionStorage.setItem("utilisateur",JSON.stringify(res.data));
           this.onLoginSuccess(nom+" "+prenom);
         }  
     });
@@ -151,6 +158,7 @@ class NavBar extends Component {
   }
 
   openModal(initialTab) {
+    
     this.setState({
       initialTab: initialTab
     }, () => {
@@ -202,6 +210,13 @@ class NavBar extends Component {
       error: null
     });
   }
+  deconnection(){
+    this.setState({
+      loggedIn: null,
+      loading: false
+    })
+    sessionStorage.removeItem("utilisateur");
+  }
 
   render() {
 
@@ -212,7 +227,7 @@ class NavBar extends Component {
       
       <div>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href={Parametres.PREFIX_URL+"/acceuil"}>Odyssea Spatium</Navbar.Brand>
+          <Navbar.Brand >Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
             <li className="Lien"><Link to={Parametres.PREFIX_URL+"/acceuil"}>Acceuil</Link></li>
             {loggedIn ? (
@@ -224,9 +239,16 @@ class NavBar extends Component {
           </Nav>
           
           {loggedIn ? (
-            <div className="login">
-              {loggedIn}
-            </div>
+            <>
+              <div className="login">
+                {loggedIn}
+              </div>
+              <>
+                <Form inline>
+                  <Button onClick={() => this.deconnection()} variant="outline-info">Deconnection</Button>
+                </Form>
+              </>
+            </>
           ) : (
             <Form inline>
               <Button onClick={() => this.openModal()} variant="outline-info">Connexion</Button>

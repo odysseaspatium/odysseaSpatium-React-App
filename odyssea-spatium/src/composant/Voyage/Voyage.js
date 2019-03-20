@@ -13,10 +13,6 @@ import axios from 'axios';
 class Voyage extends Component {
   constructor(props) {
     super(props);
-    let visiteur=null;
-    if(!isNullOrUndefined(this.props.state)){
-      visiteur = this.props.state.utilisateur.id_user;
-    }
     console.log(this.props.location.state)
     
     this.state = {
@@ -27,7 +23,7 @@ class Voyage extends Component {
       annonce:this.props.location.state.image.annonce_voyage,
       dateDebut:this.props.location.state.image.dateDebut_voyage,
       dateFin:this.props.location.state.image.dateFin_voyage,
-      id_Utilisateur:visiteur,
+      Utilisateur:JSON.parse(sessionStorage.getItem("utilisateur")),
       showIndex: true,
       showBullets: true,
       infinite: true,
@@ -58,19 +54,22 @@ class Voyage extends Component {
       })
     }
     console.log(this.image)
-    axios({
-      url: Parametres.URL_TOMCAT+'/Bridge',
-      method: 'post',
-      data: {
-        id_utilisateur : this.state.id_Utilisateur,
-        route: 'Panier/idPanier',
-      }
-    }).then(res => {
-      if (res.data !== ""){
-        console.log(res);
-        this.setState({id_panier:res.data[0].id_panier});
-      }
-    });
+    if(this.state.Utilisateur !=null){
+   
+      axios({
+        url: Parametres.URL_TOMCAT+'/Bridge',
+        method: 'post',
+        data: {
+          id_utilisateur : this.state.Utilisateur.id_user,
+          route: 'Panier/idPanier',
+        }
+      }).then(res => {
+        if (res.data !== ""){
+          console.log(res);
+          this.setState({id_panier:res.data[0].id_panier});
+        }
+      });
+    } 
     axios({
       url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
@@ -116,23 +115,26 @@ class Voyage extends Component {
     if(document.getElementById("Ajout_image").value!=null)
       imageCommentaire.push(document.getElementById("Ajout_image").value);
     console.log(imageCommentaire);
-    axios({
-      url: Parametres.URL_TOMCAT+'/Bridge',
-      method: 'post',
-      data: {
-        id_voyage: this.state.id_Voyage,
-        id_utilisateur : this.state.id_Utilisateur,
-        commentaire: document.getElementById("commentaire").value,
-        route:'Commentaire/addCommentaire',
-        image:imageCommentaire,
-      }
-    }).then(res => {
-      if (res.data !== ""){
-        console.log(res);
-        document.getElementById("Ajouter_Commentaire_retour").innerHTML="Sucess";
-      }
-      document.getElementById("Ajouter_Commentaire_retour").innerHTML="Echec";
-    });
+
+    if(this.state.Utilisateur !=null){
+      axios({
+        url: Parametres.URL_TOMCAT+'/Bridge',
+        method: 'post',
+        data: {
+          id_voyage: this.state.id_Voyage,
+          id_utilisateur : this.state.Utilisateur.id_user,
+          commentaire: document.getElementById("commentaire").value,
+          route:'Commentaire/addCommentaire',
+          image:imageCommentaire,
+        }
+      }).then(res => {
+        if (res.data !== ""){
+          console.log(res);
+          document.getElementById("Ajouter_Commentaire_retour").innerHTML="Sucess";
+        }
+        document.getElementById("Ajouter_Commentaire_retour").innerHTML="Echec";
+      });
+    }
   }
   _redirect(){
     axios({
@@ -147,7 +149,6 @@ class Voyage extends Component {
     this.state.history.push({
       pathname: Parametres.PREFIX_URL+'/panier',
       state :{
-        id_Utilisateur:this.state.id_Utilisateur,
         id_Voyage:this.state.id_Voyage,
         prix:this.state.prix,
         }
@@ -165,7 +166,7 @@ class Voyage extends Component {
 
     render() {
     
-      const loggedIn=this.state.id_Utilisateur;
+      const loggedIn=this.state.Utilisateur;
       return (
         <div>
           <table className="description-achat-voyage">
@@ -201,8 +202,8 @@ class Voyage extends Component {
                 </section>
               </td>
               <td>
-                <p>Debut: <DatePicker selected={this.state.dateDebut} readOnly={true} locale={fr}/></p>
-                <p>Fin prevue:<DatePicker selected={this.state.dateFin} readOnly={true} locale={fr}/></p>
+                <p>Debut: <DatePicker className="datepick" selected={this.state.dateDebut} readOnly={true} locale={fr}/></p>
+                <p>Fin prevue:<DatePicker  className="datepick" selected={this.state.dateFin} readOnly={true} locale={fr}/></p>
                 <p>{this.state.descriptionVoyage}</p>
               </td>
               <td className="contenant-prix">
