@@ -27,6 +27,11 @@ class Historique extends Component {
     render() {
     
       return (
+
+        <div>
+
+        {this.state.Utilisateur ? (
+          <>
             <table>
               <thead>
                 <tr>
@@ -50,6 +55,13 @@ class Historique extends Component {
                 </tr>
               </tbody>
             </table>
+            </>
+          ):(
+          this.state.history.push({
+            pathname: Parametres.PREFIX_URL+'/acceuil',
+          })
+        )}
+        </div>
       );
     }
   }

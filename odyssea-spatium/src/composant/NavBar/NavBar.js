@@ -44,8 +44,9 @@ class NavBar extends Component {
 
   constructor(props) {
     super(props);
-
+    console.log(props);
     this.state = {
+      history:this.props.history,
       showModal: false,
       loggedIn: null,
       loading: false,
@@ -224,6 +225,10 @@ class NavBar extends Component {
       loading: false
     })
     sessionStorage.removeItem("utilisateur");
+    console.log(this.state.history.location.pathname)
+    this.state.history.push({
+      pathname: this.state.history.location.pathname,
+    })
   }
 
   render() {
@@ -237,11 +242,11 @@ class NavBar extends Component {
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand >Odyssea Spatium</Navbar.Brand>
           <Nav className="mr-auto">
-            <li className="Lien"><Link to={Parametres.PREFIX_URL+"/acceuil"}>Acceuil</Link></li>
+            <li className="Lien"><Link to={Parametres.PREFIX_URL+"/acceuil"}>Accueil</Link></li>
             {loggedIn ? (
               <>
-                <li className="Lien"><Link to={Parametres.PREFIX_URL+"/Historique"}>Historique</Link></li>
-                <li className="Lien"><Link to={Parametres.PREFIX_URL+"/Panier"}>Panier</Link></li>
+                <li className="Lien"><Link to={Parametres.PREFIX_URL+"/historique"}>Historique</Link></li>
+                <li className="Lien"><Link to={Parametres.PREFIX_URL+"/panier"}>Panier</Link></li>
               </>
               ) : (null)}
           </Nav>

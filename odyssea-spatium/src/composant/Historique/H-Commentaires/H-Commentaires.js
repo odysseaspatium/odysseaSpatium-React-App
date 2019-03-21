@@ -36,11 +36,23 @@ class HCommentaires extends Component {
     render() {
     
       return (
+
+        <div>
+
+        {this.state.Utilisateur ? (
+          <>
           <div>
             <div>Historique Commentaire</div>
             <hr/>
             <div>{this.state.Commentaires}</div>
           </div>
+          </>
+          ):(
+          this.state.history.push({
+            pathname: Parametres.PREFIX_URL+'/acceuil',
+          })
+        )}
+        </div>
       );
     }
   }

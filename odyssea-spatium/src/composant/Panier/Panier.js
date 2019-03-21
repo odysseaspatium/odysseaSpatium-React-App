@@ -101,7 +101,11 @@ class Panier extends Component {
   }
     render() {
       return (
+
         <div>
+
+        {this.state.Utilisateur ? (
+          <>
           <div>Panier</div>
           <hr/>
           <div>
@@ -110,6 +114,12 @@ class Panier extends Component {
             <div>                 
               <button id="Valider_Panier" type="submit" value="Valider" onClick={this.validerPanier.bind(this)}>Valier panier</button>
             </div>
+            </>
+          ):(
+          this.state.history.push({
+            pathname: Parametres.PREFIX_URL+'/acceuil',
+          })
+        )}
         </div>
       );
     }

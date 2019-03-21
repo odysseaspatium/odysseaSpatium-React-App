@@ -82,7 +82,7 @@ class Voyage extends Component {
         for(let index=0; index<res.data.length;index++){
           data.push(<p>{res.data[index].texte_commentaire}</p>);
           try{
-            data.push(<img src={res.data[index].lien_photos_commentaire}></img>);
+            data.push(<img alt='' src={res.data[index].lien_photos_commentaire}></img>);
           }catch(e){}
           data.push(<><br/><hr/></>);
         }
