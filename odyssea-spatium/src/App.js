@@ -18,7 +18,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state={
-      utilisateur:sessionStorage.getItem("id_Utilisateur"),
+      utilisateur:JSON.parse(sessionStorage.getItem("utilisateur")),
     }
   }
   render() {
@@ -26,7 +26,7 @@ class App extends Component {
     return (
       <Router history={createBrowserHistory()} >
       <div>
-          <NavBar updateuser={this.updateuser} />
+          <NavBar />
           <Switch>
             <Route exact path="/" component={Acceuil} />
             <Route  path={Parametres.PREFIX_URL+"/acceuil"}  component={Acceuil}/>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isNullOrUndefined } from 'util';
 import {withRouter} from 'react-router-dom';
 import * as Parametres from '../../../Param';
 import axios from 'axios';
@@ -10,18 +9,18 @@ class HPaniers extends Component {
     super(props);
     this.state = {
       history:this.props.history,
-      Utilisateur:sessionStorage.getItem("utilisateur"),
+      Utilisateur:JSON.parse(sessionStorage.getItem("utilisateur")),
       panier:null,
     }
   }
 
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/RecupererPanier',
+      url: Parametres.URL_TOMCAT+'/Bridge',
       method: 'post',
       data: {
-        id_Utilisateur : this.state.Utilisateur.id_user,
-        id_Panier : this.state.Utilisateur.id_panier_user,
+        id : this.state.Utilisateur.id,
+        route: 'HistoriquePanier/get',
       }
     }).then(res => {
       if (res.data !== ""){

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isNullOrUndefined } from 'util';
 import {withRouter} from 'react-router-dom';
 import * as Parametres from '../../../Param';
 import axios from 'axios';
@@ -10,29 +9,27 @@ class HCommentaires extends Component {
     super(props);
     this.state = {
       history:this.props.history,
-      id_Utilisateur:sessionStorage.getItem("utilisateur").id_user,
+      Utilisateur:JSON.parse(sessionStorage.getItem("utilisateur")),
       Commentaires:null,
     }
   }
   componentWillMount(){
     axios({
-      url: Parametres.URL_TOMCAT+'/RecupererCommentaires',
+      url: Parametres.URL_TOMCAT+'/RecupererPanier',
       method: 'post',
       data: {
-        id_Utilisateur : this.state.id_Utilisateur,
+        id_Utilisateur : this.state.Utilisateur.id_user,
+        id_Panier : this.state.Utilisateur.id_panier_user,
+        route: 'HistoriqueCommentaire/idPanier',
       }
     }).then(res => {
       if (res.data !== ""){
         console.log(res);
         let data=[];
         for(let index=0; index<res.data.length;index++){
-          data.push("<p>"+res.data[index].commentaire+"</p>");
-          try{
-            data.push("<img src='"+res.data[index].image+"'></img>");
-          }catch(e){}
-          data.push("<hr/>");
+          data.push("<p>"+res.data[index].annonce+"</p><p>"+res.data[index].prix+"</p><hr/>");
         }
-        this.setState({Commentaires:data});
+        this.setState({panier:data});
       }
     });
   }

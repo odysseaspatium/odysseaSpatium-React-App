@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { isNullOrUndefined } from 'util';
 import {withRouter} from 'react-router-dom';
 import * as Parametres from '../../Param';
 import './Historique.css';
@@ -9,7 +8,7 @@ class Historique extends Component {
     super(props);
     this.state = {
       history:this.props.history,
-      Utilisateur:sessionStorage.getItem("utilisateur"),
+      Utilisateur:JSON.parse(sessionStorage.getItem("utilisateur")),
     }
   }
   redirectCommentaires(){

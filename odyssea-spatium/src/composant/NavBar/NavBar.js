@@ -54,15 +54,24 @@ class NavBar extends Component {
       errorMsg: null,
       recoverPasswordSuccess: null,
     };
-    let data =JSON.parse(sessionStorage.getItem("utilisateur"));
-    try{
-      this.setState({loggedIn:data.nom +" "+data.prenom});
-    }catch{
-
-    }
-    console.log(this.state);
+   
   }
-  
+  componentWillMount(){
+    let data =JSON.parse(sessionStorage.getItem("utilisateur"));
+    if(data!=null){
+    console.log(data);
+    console.log(data.nom);
+    let nomprenom = data.nom+" "+data.prenom;
+    console.log(nomprenom);
+    
+      this.setState({
+        loggedIn : nomprenom,
+        loading: false
+      });
+      
+    console.log(this.state);
+    }
+  }
   onLogin() {
     this.startLoading();
    
@@ -168,11 +177,10 @@ class NavBar extends Component {
     });
   }
 
-  onLoginSuccess(method, response) {
-
+  onLoginSuccess(chaine, response) {
     this.closeModal();
     this.setState({
-      loggedIn: method,
+      loggedIn: chaine,
       loading: false
     })
   }

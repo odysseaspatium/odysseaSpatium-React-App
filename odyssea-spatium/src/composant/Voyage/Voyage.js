@@ -5,7 +5,6 @@ import {withRouter} from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import fr from 'date-fns/locale/fr';
 import './Voyage.css';
-import { isNullOrUndefined } from 'util';
 import * as Parametres from '../../Param';
 import axios from 'axios';
 
@@ -42,6 +41,7 @@ class Voyage extends Component {
       prix: this.props.location.state.image.prix_voyage,
       descriptionVoyage:this.props.location.state.image.description_voyage,
       id_panier:null,
+      images_commentaire:null,
     };
     this.image=[];
     console.log(this.state)
@@ -53,20 +53,18 @@ class Voyage extends Component {
         originalClass: 'featured-slide',
       })
     }
-    console.log(this.image)
     if(this.state.Utilisateur !=null){
-   
       axios({
         url: Parametres.URL_TOMCAT+'/Bridge',
         method: 'post',
         data: {
-          id_utilisateur : this.state.Utilisateur.id_user,
+          id_utilisateur : this.state.Utilisateur.id,
           route: 'Panier/idPanier',
         }
       }).then(res => {
         if (res.data !== ""){
           console.log(res);
-          this.setState({id_panier:res.data[0].id_panier});
+          this.setState({id_panier:res.data[0].id_panier_user});
         }
       });
     } 
@@ -82,11 +80,11 @@ class Voyage extends Component {
         console.log(res);
         let data=[];
         for(let index=0; index<res.data.length;index++){
-          data.push("<p>"+res.data[index].texte_commentaire+"</p>");
+          data.push(<p>{res.data[index].texte_commentaire}</p>);
           try{
-            data.push("<img src='"+res.data[index].lien_photos_commentaire+"'></img>");
+            data.push(<img src={res.data[index].lien_photos_commentaire}></img>);
           }catch(e){}
-          data.push("<hr/>");
+          data.push(<><br/><hr/></>);
         }
         this.setState({Commentaires:data});
       }
@@ -94,8 +92,6 @@ class Voyage extends Component {
   }
   componentDidMount(){
     var aujourdhui = new Date().getDate();
-    console.log(aujourdhui);
-    console.log(this.state.dateFin);
     if(aujourdhui<=this.state.dateFin){
       document.getElementById("tab_ajout_commentaire").style.display="none";
     }else{
@@ -110,22 +106,24 @@ class Voyage extends Component {
     }
     
   }
+  handleFile(e){
+    let file= e.target.files;
+    this.setState({images_commentaire:file});
+  }
   uploadCommentaire(){
-    let imageCommentaire =[];
-    if(document.getElementById("Ajout_image").value!=null)
-      imageCommentaire.push(document.getElementById("Ajout_image").value);
-    console.log(imageCommentaire);
-
     if(this.state.Utilisateur !=null){
+      let imagesCommentaire =this.state.images_commentaire;
+      let formadata = new FormData();
+      formadata.append('image',imagesCommentaire);
       axios({
         url: Parametres.URL_TOMCAT+'/Bridge',
         method: 'post',
         data: {
           id_voyage: this.state.id_Voyage,
-          id_utilisateur : this.state.Utilisateur.id_user,
           commentaire: document.getElementById("commentaire").value,
+          id_utilisateur : this.state.Utilisateur.id,
           route:'Commentaire/addCommentaire',
-          image:imageCommentaire,
+          images:formadata,
         }
       }).then(res => {
         if (res.data !== ""){
@@ -150,6 +148,7 @@ class Voyage extends Component {
       pathname: Parametres.PREFIX_URL+'/panier',
       state :{
         id_Voyage:this.state.id_Voyage,
+        id_panier:this.state.id_panier,
         prix:this.state.prix,
         }
       }
@@ -227,7 +226,7 @@ class Voyage extends Component {
                 <tbody>
                 <tr>
                   <td>
-                    <p>Ajout commentaire: <button id="Ajouter_Commentaire" type="submit" onClick={this.uploadCommentaire}>Ajouter Commentaire</button></p>
+                    <p>Ajout commentaire: <button id="Ajouter_Commentaire" type="submit" onClick={this.uploadCommentaire.bind(this)}>Ajouter Commentaire</button></p>
                     <p id="Ajouter_Commentaire_retour"></p>
                     <textarea id="commentaire" name="commentaire" rows="5" cols="55"></textarea>
                   </td>
@@ -235,7 +234,7 @@ class Voyage extends Component {
                 <tr>
                   <td>
                     <p> Ajout images a votre commentaire:</p>
-                    <input type="file" id="Ajout_image" name="Ajout_image" accept="image/png, image/jpeg"></input>
+                    <input type="file" multiple id="Ajout_image" name="Ajout_image" accept="image/png, image/jpeg" onChange={(e)=>this.handleFile(e)}></input>
                   </td>
                 </tr>
                 </tbody>
